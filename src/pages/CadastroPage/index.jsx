@@ -1,24 +1,36 @@
 import React, { useState, useContext } from "react";
 import UnifeiImg from '../../assets/unifei.svg'
+import {createUser} from '../../services/api';
+import {useNavigate} from 'react-router-dom';
 
 import { AuthContext } from "../../contexts/auth";
 
  const CadGrupoPage = () => {
-
+    const navigate = useNavigate();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [matricula, setMatricula] = useState("");
     const [periodo, setPeriodo] = useState("");
     const [curso, setCurso] = useState("");
-    
+    const handleSubmit = async (e) => {
+      e.preventDefault()
+      const foto = 'aa'
+      const response = await createUser(name,email,password,matricula,periodo,curso,foto)
 
+      if(response.status == 200){
+        navigate('/login');
+      }
+
+    }
+
+    
 
     return(
         <div className="container">
         <div className="container-login">
           <div className="wrap-login">
-            <form className="login-form">
+            <form className="login-form" onSubmit={handleSubmit}>
               <span className="login-form-title"> Criar Conta </span>
   
               <span className="login-form-title">
@@ -28,7 +40,7 @@ import { AuthContext } from "../../contexts/auth";
               <div className="wrap-input">
                 <input
                   className={name !== "" ? "has-val input" : "input"}
-                  type="email"
+                  type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />

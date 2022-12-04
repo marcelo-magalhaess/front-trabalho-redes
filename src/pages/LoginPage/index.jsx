@@ -1,21 +1,29 @@
 import React, { useState, useContext } from "react";
-
+import {login} from '../../services/api'
 import { AuthContext } from "../../contexts/auth";
 import "./styles.css";
 import UnifeiImg from '../../assets/unifei.svg'
+import {useNavigate} from 'react-router-dom'
+import {ReactSession} from 'react-client-session'
 
 
 const LoginPage = () => {
 
-    const { authenticated, login } = useContext(AuthContext);
+    
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const handleSubmit = (e) => {
+    const navigate = useNavigate()
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log("submit", {email, password });
-        login(email, password);
+        const response = await login(email, password);
+        if(response.data==1){
+          ReactSession.set('email',email)
+          ReactSession.set('password',password)
+          //ReactSession.set('id',response.data.id)
+          navigate("/")
+        }
 
     };
 
@@ -24,7 +32,7 @@ const LoginPage = () => {
 <div className="container">
       <div className="container-login">
         <div className="wrap-login">
-          <form className="login-form">
+          <form className="login-form" onSubmit={handleSubmit}>
             <span className="login-form-title"> Bem vindo </span>
 
             <span className="login-form-title">
